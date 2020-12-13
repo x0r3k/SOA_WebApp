@@ -1,4 +1,4 @@
-import Test from '../components/test';
+import Test from '../components/mainPage';
 import Register from '../components/auth/register';
 import Login from '../components/auth/login';
 
