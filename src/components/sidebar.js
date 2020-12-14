@@ -9,6 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import axios from 'axios';
 
 let drawerWidth = 240;
 
@@ -35,13 +36,21 @@ const useStyles = makeStyles((theme) => ({
 export default function SideBar(props) {
   // const { toggleSidebar, openSidebar } = props;
   const classes = useStyles();
-  // useEffect(() => {
-  //   console.log("Sidebar", openSidebar);
-  // }, [openSidebar]);
+  const [categories, setCategories] = useState([]);
 
+  useEffect(() => {
+    let requestBody = {};
+    requestBody.uri = '/api/category/getCategories';
+    requestBody.method = 'GET';
+
+    axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, requestBody)
+    .then(response => setCategories(response.data.foundedCategories))
+    .catch(error => console.log(error));
+  }, []);
 
   return (
     <div className={classes.root}>
+    {console.log(categories)}
       <Fragment>
         <Drawer
           anchor={'left'}
@@ -55,21 +64,6 @@ export default function SideBar(props) {
         >
           <div className={classes.drawerContainer}>
             <List>
-              {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
-            </List>
-            <Divider />
-            <List>
-              {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
             </List>
           </div>
         </Drawer>

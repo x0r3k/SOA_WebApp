@@ -9,6 +9,7 @@ export default [
         path: '/',
         roles: [],
         isPrivate: false,
+        isToken: true
 
     },
     {
@@ -17,6 +18,7 @@ export default [
         path: '/login',
         roles: [],
         isPrivate: false,
+        isToken: false
 
     },
     {
@@ -25,8 +27,10 @@ export default [
         path: '/register',
         roles: [],
         isPrivate: false,
+        isToken: false
 
     },
+    
     // {
     //     id: 6,
     //     Component: UserConversationHistoryPage,

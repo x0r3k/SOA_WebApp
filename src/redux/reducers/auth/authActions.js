@@ -1,36 +1,65 @@
 import axios from 'axios';
-import {LOGIN, REGISTER, UPDATE_TOKENS} from "./authConstants";
+import {LOGIN, REGISTER, UPDATE_TOKENS, SET_ERROR, SET_TOKEN} from "./authConstants";
 
 export function login(params){
-    const request = axios.post(`http://localhost:${process.env.FACADE_PORT}/facade/handleWebRequest`, params);
+    let requestBody = {};
+    requestBody.uri = '/api/auth/authorization';
+    requestBody.method = 'POST';
+    requestBody.body = params;
+    requestBody.body.fingerprint = navigator.userAgent;
+
+    const request = axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, requestBody);
     return (dispatch) =>
         request.then((response) => {
-
-            dispatch(
-                {
-                    type: LOGIN,
-                    payload: request,
-                }
-            )
+            console.log("Login");
+            localStorage.accessToken = response.data.accessToken;
+            localStorage.refreshToken = response.data.refreshToken;
+            dispatch(setToken(response.data.accessToken))
+            dispatch(setError(false));
         })
         .catch(error => {
+            dispatch(setError(true));
             console.log(error);
         });
 }
 
 export function register(params){
-    const request = axios.post(`http://localhost:${process.env.FACADE_PORT}/facade/handleWebRequest`, params);
-    return (dispatch) =>
+    let requestBody = {};
+    requestBody.uri = '/api/auth/register';
+    requestBody.method = 'POST';
+    requestBody.body = params;
+    const request = axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, requestBody);
+    return (dispatch) =>{        
         request.then((response) => {
-
-            dispatch(
-                {
-                    type: REGISTER,
-                    payload: request,
-                }
-            )
+            console.log("Register");
+            const loginParams = {
+                email: params.email,
+                password: params.password
+            }
+            dispatch(login(loginParams));
+            dispatch(setError(false));
         })
         .catch(error => {
+            dispatch(setError(true));
             console.log(error);
         });
+    }
+}
+
+function setError (param) {
+    return (dispatch) => {
+        dispatch({
+            type: SET_ERROR,
+            payload: param
+        })
+    }
+}
+
+
+export const setToken = (token) => (dispatch) => {
+    console.log("Set Token");
+    dispatch({
+        type: SET_TOKEN,
+        payload: token
+    })
 }

@@ -2,15 +2,16 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 // import setConfig from '../routing/config/setConfig';
 
-export default function PrivatePage({ Component, roles, isPrivate, token, ...rest }) 
+export default function PrivatePage({ Component, roles, isPrivate, token, isToken, ...rest }) 
 {
     return ( 
         <Route
                 {...rest}
                 render={(props) => {
+                  console.log(Component, token)
                   if (isPrivate) {
                     if (token) {
-                      if (true) {
+                      if ('checkRoles') {
                         return (
                             <Component {...props}/>
                         );
@@ -19,7 +20,7 @@ export default function PrivatePage({ Component, roles, isPrivate, token, ...res
                     }
                     return <Redirect to='/login'/>;
                   }
-                  return !token ? <Component {...props}/> : <Redirect to='/'/>;
+                  return !token ? <Component {...props}/> : isToken ? <Component {...props}/> : <Redirect to='/'/>;
                 }}
             />
     );

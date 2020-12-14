@@ -1,16 +1,19 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import routerConfig from './routerConfig';
 import PrivatePage from './privatePage';
+import Test from '../components/mainPage'
 
 function Router(props) {
     // const authToken = useSelector(({ authReducer }) => authReducer.tokenPayload);
-    const [userToken, setUserToken] = useState(localStorage.getItem("userToken"));
+    const isUser = useSelector(({authReducer}) => authReducer.user);
+
+
 
     return (
         <Fragment>
-            <Switch>
+            <Switch> 
                 {
                     routerConfig.map(item => {
                             return (
@@ -22,7 +25,8 @@ function Router(props) {
                                     Component={item.Component}
                                     exact
                                     key={item.id}
-                                    token={userToken}
+                                    token={isUser}
+                                    isToken={item.isToken}
                                 />
                             )
                     })
