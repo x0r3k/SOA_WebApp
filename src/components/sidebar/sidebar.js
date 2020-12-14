@@ -3,15 +3,11 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import axios from 'axios';
 
-let drawerWidth = 240;
+import MenuItem from './components/menuItem';
+
+let drawerWidth = 350;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    top: 128,
+    top: 64,
   },
   drawerContainer: {
     overflow: 'auto',
@@ -44,13 +40,12 @@ export default function SideBar(props) {
     requestBody.method = 'GET';
 
     axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, requestBody)
-    .then(response => setCategories(response.data.foundedCategories))
+    .then(response => setCategories(response.data))
     .catch(error => console.log(error));
   }, []);
 
   return (
     <div className={classes.root}>
-    {console.log(categories)}
       <Fragment>
         <Drawer
           anchor={'left'}
@@ -64,6 +59,11 @@ export default function SideBar(props) {
         >
           <div className={classes.drawerContainer}>
             <List>
+              { 
+                categories.map(item => {
+                  return <MenuItem item={item}/>
+                })
+              }
             </List>
           </div>
         </Drawer>

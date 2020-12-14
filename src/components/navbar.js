@@ -163,6 +163,12 @@ export default function Navbar(props) {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
+          <IconButton
+              edge="end"
+              color="inherit"
+            >
+              <ShoppingCartIcon fontSize="large"/>
+            </IconButton>
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -174,17 +180,6 @@ export default function Navbar(props) {
               {
                 login ? <AccountCircle fontSize="large"/> : <ExitToApp fontSize="large"/>
               }
-            </IconButton>
-          </div>
-        </Toolbar>
-        <Toolbar>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton
-              edge="end"
-              color="inherit"
-            >
-              <ShoppingCartIcon fontSize="large"/>
             </IconButton>
           </div>
         </Toolbar>
