@@ -5,18 +5,20 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import AddIcon from '@material-ui/icons/Add';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import LoginIcon from '@material-ui/icons/ExitToApp';
+import { ExitToApp } from '@material-ui/icons';
+
+import Badge from '@material-ui/core/Badge';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import { ExitToApp } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -71,7 +73,18 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
     [theme.breakpoints.up('md')]: {
       display: 'flex',
+      // padding: theme.spacing(0, 1),
     },
+  },
+  button: {
+    margin: theme.spacing(1),
+    fontSize: 20,
+  },
+  toolbar: {
+    minHeight: 64,
+    // alignItems: 'flex-start',
+    // paddingTop: theme.spacing(1),
+    // paddingBottom: theme.spacing(1),
   },
 }));
 
@@ -131,7 +144,7 @@ export default function Navbar(props) {
   return (
     <div className={classes.grow}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           { 
             withSidebar && 
             <IconButton
@@ -162,20 +175,26 @@ export default function Navbar(props) {
             />
           </div>
           <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-          <IconButton
+          <Button
               edge="end"
               color="inherit"
+              className={classes.button}
+              // startIcon={<DriveEtaIcon fontSize="large"/>}
+              // endIcon={<AddIcon fontSize="large"/>}
+              size='large'
             >
-              <ShoppingCartIcon fontSize="large"/>
+              <DriveEtaIcon fontSize="large"/>
+                Add new car
+              <AddIcon fontSize="large"/>
+            </Button>
+          <div className={classes.sectionDesktop}>
+            <IconButton aria-label="show 4 new mails" color="inherit">
+                <ShoppingCartIcon fontSize="large"/>
             </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+            <IconButton 
+              aria-label="show 17 new notifications" 
               color="inherit"
+              onClick={handleProfileMenuOpen}
             >
               {
                 login ? <AccountCircle fontSize="large"/> : <ExitToApp fontSize="large"/>
