@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategories } from '../../redux/reducers/category/categoryActions';
 import axios from 'axios';
 
 import MenuItem from './components/menuItem';
@@ -31,18 +33,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SideBar(props) {
   // const { toggleSidebar, openSidebar } = props;
+  const dispatch = useDispatch();
   const classes = useStyles();
-  const [categories, setCategories] = useState([]);
+  const categories = useSelector(({categoryReducer}) => categoryReducer.category);
+
 
   useEffect(() => {
-    let requestBody = {};
-    requestBody.uri = '/api/category/getCategories';
-    requestBody.method = 'GET';
-
-    axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, requestBody)
-    .then(response => setCategories(response.data))
-    .catch(error => console.log(error));
+    dispatch(setCategories());
   }, []);
+
 
   return (
     <div className={classes.root}>
@@ -61,7 +60,7 @@ export default function SideBar(props) {
             <List>
               { 
                 categories.map(item => {
-                  return <MenuItem item={item}/>
+                  return <MenuItem item={item} key={item.id}/>
                 })
               }
             </List>

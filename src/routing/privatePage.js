@@ -8,7 +8,6 @@ export default function PrivatePage({ Component, roles, isPrivate, token, isToke
         <Route
                 {...rest}
                 render={(props) => {
-                  console.log(Component, token)
                   if (isPrivate) {
                     if (token) {
                       if ('checkRoles') {

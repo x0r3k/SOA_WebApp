@@ -1,0 +1,1 @@
+export const SET_PRODUCTS = '[PRODUCT] SET PRODUCTS';

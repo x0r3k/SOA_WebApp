@@ -1,6 +1,7 @@
 import Test from '../components/mainPage';
 import Register from '../components/auth/register';
 import Login from '../components/auth/login';
+import ProductPage from '../components/products/product';
 
 export default [
     {
@@ -10,7 +11,6 @@ export default [
         roles: [],
         isPrivate: false,
         isToken: true
-
     },
     {
         id: 2,
@@ -19,7 +19,6 @@ export default [
         roles: [],
         isPrivate: false,
         isToken: false
-
     },
     {
         id: 3,
@@ -28,7 +27,14 @@ export default [
         roles: [],
         isPrivate: false,
         isToken: false
-
+    },
+    {
+        id: 4,
+        Component: ProductPage,
+        path: '/products/:id',
+        roles: [],
+        isPrivate: false,
+        isToken: true
     },
     
     // {

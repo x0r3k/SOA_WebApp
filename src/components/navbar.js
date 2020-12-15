@@ -16,10 +16,6 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { ExitToApp } from '@material-ui/icons';
 
-import Badge from '@material-ui/core/Badge';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
@@ -82,9 +78,6 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     minHeight: 64,
-    // alignItems: 'flex-start',
-    // paddingTop: theme.spacing(1),
-    // paddingBottom: theme.spacing(1),
   },
 }));
 
@@ -204,7 +197,7 @@ export default function Navbar(props) {
         </Toolbar>
       </AppBar>
       { login ? renderAuthMenu : renderUnauthMenu}
-      { React.cloneElement(props.children, { openSidebar, toggleSidebar }) }
+      { React.cloneElement(props.children) }
     </div>
   );
 }
