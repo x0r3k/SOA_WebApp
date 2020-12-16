@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,6 +17,7 @@ import AddIcon from '@material-ui/icons/Add';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { ExitToApp } from '@material-ui/icons';
+import { setGarageCars } from '../redux/reducers/car/carActions';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -82,7 +85,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar(props) {
-  const login = true;
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const user = useSelector(({authReducer}) => authReducer.user);
+  useEffect(() => {
+    dispatch(setGarageCars());
+  }, []);
   const { withSidebar } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -115,8 +123,8 @@ export default function Navbar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Login</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Register</MenuItem>
+      <MenuItem onClick={()=> history.push('/login') }>Login</MenuItem>
+      <MenuItem onClick={()=> history.push('/register') }>Register</MenuItem>
     </Menu>
   );
   const renderAuthMenu = (
@@ -172,8 +180,6 @@ export default function Navbar(props) {
               edge="end"
               color="inherit"
               className={classes.button}
-              // startIcon={<DriveEtaIcon fontSize="large"/>}
-              // endIcon={<AddIcon fontSize="large"/>}
               size='large'
             >
               <DriveEtaIcon fontSize="large"/>
@@ -190,13 +196,13 @@ export default function Navbar(props) {
               onClick={handleProfileMenuOpen}
             >
               {
-                login ? <AccountCircle fontSize="large"/> : <ExitToApp fontSize="large"/>
+                user ? <AccountCircle fontSize="large"/> : <ExitToApp fontSize="large"/>
               }
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
-      { login ? renderAuthMenu : renderUnauthMenu}
+      { user ? renderAuthMenu : renderUnauthMenu}
       { React.cloneElement(props.children) }
     </div>
   );

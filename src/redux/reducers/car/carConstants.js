@@ -1,0 +1,2 @@
+export const SET_GARAGE_CARS = '[CAR] SET GARAGE CARS';
+export const SET_CURRENT_CAR = '[CAR] SET CURRENT CAR';

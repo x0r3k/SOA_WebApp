@@ -29,7 +29,8 @@ const authReducer = function (state = initialState, action) {
             }
         }
         case Actions.SET_TOKEN:{
-            let decode = jwt.decode(action.payload)
+            let decode = jwt.decode(action.payload);
+            console.log(action.payload);
             return {
                 ...state,
                 user: decode

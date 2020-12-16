@@ -11,7 +11,10 @@ export default function configureStore(preloadedState) {
 
   const store = createStore(rootReducer, preloadedState, composedEnhancers);
 
-  store.dispatch(setToken(localStorage.getItem('accessToken')))
+  if(localStorage.getItem('accessToken')){
+    store.dispatch(setToken(localStorage.getItem('accessToken')));
+  }
+  
 
   return store;
 }
