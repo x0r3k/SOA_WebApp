@@ -119,9 +119,7 @@ export default function Navbar(props) {
   };
 
   const handleCarList = () => {
-    console.log('FUNCTION');
     if(!garageCars || !garageCars.length) {
-      console.log("IF")
       history.push('/car');
     }
   }

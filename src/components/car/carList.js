@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 
 import Navbar from '../navbar';
+import CarListCard from './carListCard';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,7 +50,6 @@ export default function MainPage (props) {
                 withSidebar={false}
                 withCarList={false}
             >
-                <div>
                     <Grid container className={classes.root} spacing={2}>
                         <Grid item xs={8} >
                             <Paper 
@@ -64,11 +64,20 @@ export default function MainPage (props) {
                                         add a vehicle
                                     </Button>
                                 </div>
-
+                                <Grid container direction="column" spacing={2}>
+                                    {
+                                        [1,2,3].map(item => {
+                                            return (
+                                                <Grid item>
+                                                    <CarListCard/>
+                                                </Grid>
+                                            )
+                                        })
+                                    }
+                                </Grid>
                             </Paper>
                         </Grid>
                     </Grid>
-                </div>
             </Navbar>
         </div>
     )

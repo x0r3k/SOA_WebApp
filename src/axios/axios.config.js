@@ -1,6 +1,6 @@
 import axios from 'axios';
 import store from '../redux';
-import { actionLogout } from '../redux/authorization/constants/actionConstants';
+import { logout, updateTokens } from '../redux/reducers/auth/authActions';
 
 const setAxios = () => {
     const setDeafults = (() => {
@@ -14,30 +14,14 @@ const setAxios = () => {
 
     const refreshTokens = async () => {
         try {
-            const response = await axios.create().post(`${config.api_url}/api/auth/updateToken`, {refreshToken: localStorage.refreshToken});
-            console.log('response', response);
-            localStorage.accessToken = response.data.payload.accessToken;
-            localStorage.refreshToken = response.data.payload.refreshToken;
-            localStorage.accessExpiresTime = Date.now() + Number(response.data.payload.accessTokenExpiresTime);
+            store.dispatch(updateTokens());
         } catch (error) {
-            logout();
+            store.dispatch(logout());
         }
     }
 
     axios.interceptors.request.use(
-        async (request) => {
-            if(localStorage.accessExpiresTime < (Date.now() + 2000)) {
-                console.log('update token');
-                promise = refreshTokens();
-            }
-            await promise;
-            request.headers.Authorization = `Bearer ${localStorage.accessToken}`;
-            return request;
-        }, 
-        (error) => {
-            console.log(error);
-            return error;
-        }
+        request => { return request }
     );
 
     axios.interceptors.response.use(
@@ -45,6 +29,9 @@ const setAxios = () => {
             return response
         }, 
         (error) => {
+            if(error.response.status === 401) {
+                
+            }
             console.log(error);
             return error;
         }
