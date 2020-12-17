@@ -1,2 +1,3 @@
 export const SET_GARAGE_CARS = '[CAR] SET GARAGE CARS';
 export const SET_CURRENT_CAR = '[CAR] SET CURRENT CAR';
+export const CLEAR_REDUCER = '[CAR] CLEAR REDUCER';

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {SET_GARAGE_CARS, SET_CURRENT_CAR} from "./carConstants";
+import {SET_GARAGE_CARS, SET_CURRENT_CAR, CLEAR_REDUCER} from "./carConstants";
 
 export function setGarageCars(){
     let requestBody = {};
@@ -27,6 +27,14 @@ export function setCurrentCar(category) {
         dispatch({
             type: SET_CURRENT_CAR,
             payload: category
+        });
+    }
+}
+
+export function clearReducer() {
+    return (dispatch) => {
+        dispatch({
+            type: CLEAR_REDUCER,
         });
     }
 }

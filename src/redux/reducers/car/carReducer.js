@@ -19,6 +19,11 @@ const carReducer = function (state = initialState, action) {
                 currentCar: action.payload
             }
         }
+        case Actions.CLEAR_REDUCER: {
+            return {
+                ...initialState
+            }
+        }
         default: {
             return state;
         }

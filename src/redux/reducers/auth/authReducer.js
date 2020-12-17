@@ -36,6 +36,11 @@ const authReducer = function (state = initialState, action) {
                 user: decode
             }
         }
+        case Actions.LOGOUT: {
+            return {
+                ...initialState
+            }
+        }
         default: {
             return state;
         }

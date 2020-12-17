@@ -17,7 +17,8 @@ import AddIcon from '@material-ui/icons/Add';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { ExitToApp } from '@material-ui/icons';
-import { setGarageCars } from '../redux/reducers/car/carActions';
+import { setGarageCars, clearReducer } from '../redux/reducers/car/carActions';
+import { logout } from '../redux/reducers/auth/authActions';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -88,9 +89,14 @@ export default function Navbar(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector(({authReducer}) => authReducer.user);
+  const garageCars = useSelector(({carReducer}) => carReducer.garageCars);
+
   useEffect(() => {
-    dispatch(setGarageCars());
+    if(user) {
+      dispatch(setGarageCars());
+    }
   }, []);
+
   const { withSidebar } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -112,6 +118,14 @@ export default function Navbar(props) {
     setAnchorEl(null);
   };
 
+  const handleCarList = () => {
+    console.log('FUNCTION');
+    if(!garageCars || !garageCars.length) {
+      console.log("IF")
+      history.push('/car');
+    }
+  }
+
   const menuId = 'primary-search-account-menu';
   const renderUnauthMenu = (
     <Menu
@@ -127,6 +141,7 @@ export default function Navbar(props) {
       <MenuItem onClick={()=> history.push('/register') }>Register</MenuItem>
     </Menu>
   );
+
   const renderAuthMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -138,7 +153,11 @@ export default function Navbar(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={ () => {
+        dispatch(logout());
+        dispatch(clearReducer());
+        handleMenuClose();
+      } }>Logout</MenuItem>
     </Menu>
   );
 
@@ -176,16 +195,20 @@ export default function Navbar(props) {
             />
           </div>
           <div className={classes.grow} />
-          <Button
-              edge="end"
-              color="inherit"
-              className={classes.button}
-              size='large'
-            >
-              <DriveEtaIcon fontSize="large"/>
-                Add new car
-              <AddIcon fontSize="large"/>
+          {
+            props.withCarList &&           
+            <Button
+                edge="end"
+                color="inherit"
+                className={classes.button}
+                size='large'
+                onClick={handleCarList}
+              >
+                <DriveEtaIcon fontSize="large"/>
+                  Add new car
+                <AddIcon fontSize="large"/>
             </Button>
+          }
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
                 <ShoppingCartIcon fontSize="large"/>

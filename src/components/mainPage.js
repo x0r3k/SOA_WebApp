@@ -7,6 +7,7 @@ export default function MainPage (props){
         <div>
             <Navbar
                 withSidebar={false}
+                withCarList={true}
             >
                 <Sidebar {...props}>
                     <div>MAIN PAGE</div>

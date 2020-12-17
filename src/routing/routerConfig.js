@@ -2,6 +2,8 @@ import Test from '../components/mainPage';
 import Register from '../components/auth/register';
 import Login from '../components/auth/login';
 import ProductPage from '../components/products/product';
+import CarPage from '../components/car/carList';
+import { setGarageCars, clearReducer } from '../redux/reducers/car/carActions';
 
 export default [
     {
@@ -35,6 +37,14 @@ export default [
         roles: [],
         isPrivate: false,
         isToken: true
+    },
+    {
+        id: 5,
+        Component: CarPage,
+        path: '/car',
+        roles: [],
+        isPrivate: true,
+        isToken: false
     },
     
     // {

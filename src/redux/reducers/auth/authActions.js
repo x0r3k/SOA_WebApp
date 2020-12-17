@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {LOGIN, REGISTER, UPDATE_TOKENS, SET_ERROR, SET_TOKEN} from "./authConstants";
+import {LOGIN, REGISTER, UPDATE_TOKENS, SET_ERROR, SET_TOKEN, LOGOUT} from "./authConstants";
 
 export function login(params){
     let requestBody = {};
@@ -46,6 +46,38 @@ export function register(params){
     }
 }
 
+export function updateTokens(){
+    let requestBody = {};
+    requestBody.uri = '/api/auth/updateTokens';
+    requestBody.method = 'PUT';
+    requestBody.body.refreshToken = localStorage.refreshToken;
+    requestBody.body.fingerprint = navigator.userAgent;
+
+    const request = axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, requestBody);
+    return (dispatch) =>
+        request.then((response) => {
+            console.log("Update Tokens");
+            localStorage.accessToken = response.data.accessToken;
+            localStorage.refreshToken = response.data.refreshToken;
+            dispatch(setToken(response.data.newAccessToken))
+            dispatch(setError(false));
+        })
+        .catch(error => {
+            dispatch(setError(true));
+            console.log(error);
+        });
+}
+
+export function logout() {
+    return (dispatch) => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        dispatch({
+            type: LOGOUT
+        });
+    }
+}
+
 function setError (param) {
     return (dispatch) => {
         dispatch({
@@ -63,3 +95,4 @@ export const setToken = (token) => (dispatch) => {
         payload: token
     })
 }
+
