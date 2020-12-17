@@ -3,14 +3,13 @@ import store from '../redux';
 import { logout, updateTokens } from '../redux/reducers/auth/authActions';
 
 const setAxios = () => {
-    const setDeafults = (() => {
+    (() => {
         axios.defaults.headers.common['Content-Type'] = 'application/json';
         axios.defaults.headers.common.accept = 'application/json';
         axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
         axios.defaults.timeout = 10000;
     })();
 
-    let promise = null;
 
     const refreshTokens = async () => {
         try {
@@ -19,20 +18,24 @@ const setAxios = () => {
             store.dispatch(logout());
         }
     }
-
     axios.interceptors.request.use(
-        request => { return request }
+        (request) => { 
+            console.log("request", request);
+            return request 
+        },
+        (error) => {
+            console.log("Error1", error);
+            return error;
+        }
     );
-
     axios.interceptors.response.use(
         (response) => {
+            console.log("response", response);
+            
             return response
         }, 
         (error) => {
-            if(error.response.status === 401) {
-                
-            }
-            console.log(error);
+            console.log("Error", error);
             return error;
         }
     );

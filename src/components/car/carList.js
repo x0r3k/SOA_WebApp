@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import Navbar from '../navbar';
 import CarListCard from './carListCard';
+import AddNewCar from './addNewCar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'row'
     },
-    test: {
+    floatRight: {
         marginLeft: 'auto'
     }
 
@@ -43,9 +44,11 @@ export default function MainPage (props) {
     const classes = useStyles();
     const dispatch = useDispatch();
     const garageCars = useSelector(({carReducer}) => carReducer.garageCars);
+    const [openModal, setOpenModal] = useState(false);
 
     return (
         <div>
+            <AddNewCar isOpen={openModal} setIsOpen={setOpenModal}/>
             <Navbar
                 withSidebar={false}
                 withCarList={false}
@@ -60,13 +63,17 @@ export default function MainPage (props) {
                                     <Typography variant="h4" color='textPrimary'>
                                         <b>MY</b> VEHICLES
                                     </Typography>
-                                    <Button startIcon={<AddIcon/>} className={classes.test}>
+                                    <Button 
+                                        startIcon={<AddIcon/>} 
+                                        className={classes.floatRight}
+                                        onClick={() => setOpenModal(true)}
+                                    >
                                         add a vehicle
                                     </Button>
                                 </div>
                                 <Grid container direction="column" spacing={2}>
                                     {
-                                        [1,2,3].map(item => {
+                                        [1].map(item => {
                                             return (
                                                 <Grid item>
                                                     <CarListCard/>

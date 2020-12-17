@@ -2,14 +2,16 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import routerConfig from './routerConfig';
+import setAxios from '../axios/axios.config';
 import PrivatePage from './privatePage';
-import Test from '../components/mainPage'
 
 function Router(props) {
     // const authToken = useSelector(({ authReducer }) => authReducer.tokenPayload);
     const isUser = useSelector(({authReducer}) => authReducer.user);
 
-
+    useEffect(() => {
+        setAxios();
+    }, []);
 
     return (
         <Fragment>

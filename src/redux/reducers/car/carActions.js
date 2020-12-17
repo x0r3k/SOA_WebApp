@@ -17,8 +17,8 @@ export function setGarageCars(){
                 payload: response.data.garageCars
             })
         })
-        .catch(error => {
-            console.log(error);
+        .catch(error => {   
+            console.log("AAA");
         });
 }
 
