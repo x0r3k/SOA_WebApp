@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -7,6 +8,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { addToShoppingCart } from '../../redux/reducers/product/productActions';
+
 
 const useStyles = makeStyles({
   root: {
@@ -23,10 +26,16 @@ const useStyles = makeStyles({
 
 export default function ProductCard({item}) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   let url = 'https://picsum.photos';
   let width = 400;
   let height = 300;
   let imageUrl = `${url}/${width}/${height}?t=${Date.now()}`;
+
+  const addToCart = () => {
+    dispatch(addToShoppingCart(item));
+  }
+
   return (
     <Card className={classes.root}>
         <CardMedia
@@ -45,7 +54,7 @@ export default function ProductCard({item}) {
           </Typography>
         </CardContent>
         <CardActions className={classes.cardActions}>
-            <Button size="small" color="primary">
+            <Button size="small" color="primary" onClick={addToCart}>
                 Add to shopping cart
             </Button>
         </CardActions>

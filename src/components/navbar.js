@@ -18,8 +18,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { ExitToApp } from '@material-ui/icons';
 import { setGarageCars, clearReducer } from '../redux/reducers/car/carActions';
+import { getCartProductsList } from '../redux/reducers/product/productActions';
 import { logout } from '../redux/reducers/auth/authActions';
 import CarNavbarCard from './car/carNavbarCard';
+import ShoppingCartModal from "./shoppingCart/shoppingCart";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -87,27 +89,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar(props) {
+  const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const { withSidebar, withCarList } = props;
+
   const user = useSelector(({authReducer}) => authReducer.user);
   const garageCars = useSelector(({carReducer}) => carReducer.garageCars);
   const currentCar = useSelector(({carReducer}) => carReducer.currentCar);
-
-  useEffect(() => {
-    if(user && withCarList) {
-      dispatch(setGarageCars());
-    }
-  }, []);
-
-  const { withSidebar, withCarList } = props;
-  const classes = useStyles();
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const [carAnchorEl, setCarAnchorEl] = useState(null);
+  const [openSidebar, setOpenSidebar] = useState(false);
+  const [openCart, setOpenCart] = useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isCarOpen = Boolean(carAnchorEl);
-
-  const [openSidebar, setOpenSidebar] = useState(false);
 
   const toggleSidebar = () => {
     console.log(openSidebar);
@@ -134,6 +132,14 @@ export default function Navbar(props) {
   const handleCarListClose = () => {
     setCarAnchorEl(null);
   };
+
+  useEffect(() => {
+    if(user && withCarList) {
+      dispatch(setGarageCars());
+    }
+    dispatch(getCartProductsList());
+  }, []);
+
 
   const menuId = 'primary-search-account-menu';
   const renderUnauthMenu = (
@@ -172,6 +178,7 @@ export default function Navbar(props) {
 
   return (
     <div className={classes.grow}>
+      <ShoppingCartModal isOpen={openCart} setIsOpen={setOpenCart}/>
       <AppBar position="static">
         <Toolbar className={classes.toolbar}>
           { 
@@ -220,7 +227,10 @@ export default function Navbar(props) {
             </Button>
           }
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
+            <IconButton 
+              color="inherit"
+              onClick={() => setOpenCart(true)}
+            >
                 <ShoppingCartIcon fontSize="large"/>
             </IconButton>
             <IconButton 
