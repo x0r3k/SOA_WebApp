@@ -92,12 +92,12 @@ export default function Navbar(props) {
   const garageCars = useSelector(({carReducer}) => carReducer.garageCars);
 
   useEffect(() => {
-    if(user) {
+    if(user && withCarList) {
       dispatch(setGarageCars());
     }
   }, []);
 
-  const { withSidebar } = props;
+  const { withSidebar, withCarList } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 

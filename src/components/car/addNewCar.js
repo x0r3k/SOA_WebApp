@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -12,6 +13,8 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import axios from 'axios';
+
+import { setAvaliableCars } from '../../redux/reducers/car/carActions';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -28,21 +31,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddNewCar(props) {
     const classes = useStyles();
-    const {isOpen, setIsOpen} = props;
-    const [cars, setCars] = useState([]);
+    const dispatch = useDispatch();
+    const {isOpen, setIsOpen, setIsAdded} = props;
+    const selectParams = useSelector(({carReducer}) => carReducer.selectParams);
+    const avaliableCars = useSelector(({carReducer}) => carReducer.avaliableCars);
+    const garageCars = useSelector(({carReducer}) => carReducer.garageCars);
     const [filterParams, setFilterParams] = useState({
         year: '',
         brand: '',
         model: '',
         engineCapacity: '',
         engineType: ''
-    });
-    const [selectValues, setSelectValues] = useState({
-        year: [],
-        brand: [],
-        model: [],
-        engineCapacity: [],
-        engineType: []
     });
     
     const handleSelectChange = (event) => {
@@ -55,44 +54,38 @@ export default function AddNewCar(props) {
 
     const handleClose = () => {
         setIsOpen(false);
+        setFilterParams({
+            year: '',
+            brand: '',
+            model: '',
+            engineCapacity: '',
+            engineType: ''
+        });
     };
 
-    const getCars = async () => {
-        let requestBody = {};
-        requestBody.uri = '/api/car/getCarByParams';
-        requestBody.method = 'GET';
-        let queryString = [];
-        let result = '';
-        Object.keys(filterParams).forEach(item => {
-            if(filterParams[item]) queryString.push(`${item}=${filterParams[item]}`);
-            result = queryString.join('&');
-        });
-        if(result) requestBody.uri += `?${result}`;
-    
-        try {
-            const response = await axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, { ...requestBody });
-            if (response.data.foundedCars.length === 1) {
-                console.log('One founded car');
-                let requestBody_1 = {};
-                requestBody_1.uri = '/api/car/getCarByParams';
-                requestBody_1.method = 'GET';
-            }
-            setCars(response.data.foundedCars);
-            setSelectValues({
-                year: filterParams.year ? selectValues.year : response.data.searchParams.year,
-                brand: filterParams.brand ? selectValues.brand : response.data.searchParams.brand,
-                model: filterParams.model ? selectValues.model : response.data.searchParams.model,
-                engineType: filterParams.engineType ? selectValues.engineType : response.data.searchParams.engineType,
-                engineCapacity: filterParams.engineCapacity ? selectValues.engineCapacity : response.data.searchParams.engineCapacity,
-            });
-        } catch (error) {
-            return console.log(error);
-        }
-    }
+    useEffect(() => {
+        dispatch(setAvaliableCars(filterParams, selectParams));
+    }, [filterParams, garageCars]);
 
     useEffect(() => {
-        getCars();
-    }, [filterParams]);
+        if(avaliableCars.length === 1 && isOpen) {
+            let requestBody = {};
+            requestBody.uri = `/api/car/addToGarage/${avaliableCars[0].id}`;
+            requestBody.method = 'POST';
+            requestBody.headers = {
+                Authorization: `Bearer ${localStorage.accessToken}`,
+            }
+            const response = axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, { ...requestBody });
+            response
+            .then(() => {
+                setIsAdded(true);
+                handleClose();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
+    }, [avaliableCars]);
 
     return (
         <div>
@@ -111,7 +104,7 @@ export default function AddNewCar(props) {
                     >
                         <MenuItem value=""><em>None</em></MenuItem>
                         {
-                            selectValues.year.map(item => {
+                            selectParams.year.map(item => {
                                 return <MenuItem value={item}>{item}</MenuItem>
                             })
                         }   
@@ -130,7 +123,7 @@ export default function AddNewCar(props) {
                     >
                         <MenuItem value=""><em>None</em></MenuItem>
                         {
-                            selectValues.brand.map(item => {
+                            selectParams.brand.map(item => {
                                 return <MenuItem value={item}>{item}</MenuItem>
                             })
                         }  
@@ -149,7 +142,7 @@ export default function AddNewCar(props) {
                     >
                         <MenuItem value=""><em>None</em></MenuItem>
                         {
-                            selectValues.model.map(item => {
+                            selectParams.model.map(item => {
                                 return <MenuItem value={item}>{item}</MenuItem>
                             })
                         }  
@@ -168,7 +161,7 @@ export default function AddNewCar(props) {
                     >
                         <MenuItem value=""><em>None</em></MenuItem>
                         {
-                            selectValues.engineType.map(item => {
+                            selectParams.engineType.map(item => {
                                 return <MenuItem value={item}>{item}</MenuItem>
                             })
                         } 
@@ -187,7 +180,7 @@ export default function AddNewCar(props) {
                     >
                         <MenuItem value=""><em>None</em></MenuItem>
                         {
-                            selectValues.engineCapacity.map(item => {
+                            selectParams.engineCapacity.map(item => {
                                 return <MenuItem value={item}>{item}</MenuItem>
                             })
                         } 

@@ -2,6 +2,14 @@ import * as Actions from './carConstants';
 
 const initialState = {
     garageCars: [],
+    selectParams: {
+        year: [],
+        brand: [],
+        model: [],
+        engineCapacity: [],
+        engineType: []
+    },
+    avaliableCars: [],
     currentCar: null
 };
 
@@ -17,6 +25,13 @@ const carReducer = function (state = initialState, action) {
             return {
                 ...state,
                 currentCar: action.payload
+            }
+        }
+        case Actions.SET_AVALIABLE_CARS: {
+            return {
+                ...state,
+                selectParams: action.payload.selectParams,
+                avaliableCars: action.payload.avaliableCars
             }
         }
         case Actions.CLEAR_REDUCER: {

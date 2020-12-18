@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -13,6 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Navbar from '../navbar';
 import CarListCard from './carListCard';
 import AddNewCar from './addNewCar';
+import { setGarageCars, setAvaliableCars } from '../../redux/reducers/car/carActions';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,10 +47,37 @@ export default function MainPage (props) {
     const dispatch = useDispatch();
     const garageCars = useSelector(({carReducer}) => carReducer.garageCars);
     const [openModal, setOpenModal] = useState(false);
+    const [isAdded, setIsAdded] = useState(false);
+    const [cars, setCars] = useState([]);
+
+    const deleteCar = (carId) => {
+        let requestBody = {};
+        requestBody.uri = `/api/car/removeFromGarage/${carId}`;
+        requestBody.method = 'DELETE';
+        requestBody.headers = {
+            Authorization: `Bearer ${localStorage.accessToken}`,
+        }
+        const response = axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, { ...requestBody });
+        response
+          .then((res) => {
+            setCars(cars.filter((el) => el.id !== carId));
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+      }
+  
+    useEffect(() => {
+        setCars(garageCars);
+    }, [garageCars])
+
+    useEffect(() => {
+        dispatch(setGarageCars());
+    }, [isAdded]);
 
     return (
         <div>
-            <AddNewCar isOpen={openModal} setIsOpen={setOpenModal}/>
+            <AddNewCar isOpen={openModal} setIsOpen={setOpenModal} setIsAdded={setIsAdded} />
             <Navbar
                 withSidebar={false}
                 withCarList={false}
@@ -66,17 +95,20 @@ export default function MainPage (props) {
                                     <Button 
                                         startIcon={<AddIcon/>} 
                                         className={classes.floatRight}
-                                        onClick={() => setOpenModal(true)}
+                                        onClick={() => {
+                                            setOpenModal(true);
+                                            setIsAdded(false);
+                                        }}
                                     >
                                         add a vehicle
                                     </Button>
                                 </div>
                                 <Grid container direction="column" spacing={2}>
                                     {
-                                        [1].map(item => {
+                                        cars.map(item => {
                                             return (
                                                 <Grid item>
-                                                    <CarListCard/>
+                                                    <CarListCard deleteCar={deleteCar} car={item}/>
                                                 </Grid>
                                             )
                                         })
