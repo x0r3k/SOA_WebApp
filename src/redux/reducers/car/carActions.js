@@ -59,11 +59,11 @@ export function setAvaliableCars(filterParams, selectValues) {
     }
 }
 
-export function setCurrentCar(category) {
+export function setCurrentCar(car) {
     return (dispatch) => {
         dispatch({
             type: SET_CURRENT_CAR,
-            payload: category
+            payload: car
         });
     }
 }

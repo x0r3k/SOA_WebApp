@@ -14,7 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Navbar from '../navbar';
 import CarListCard from './carListCard';
 import AddNewCar from './addNewCar';
-import { setGarageCars, setAvaliableCars } from '../../redux/reducers/car/carActions';
+import { setGarageCars } from '../../redux/reducers/car/carActions';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,6 +46,7 @@ export default function MainPage (props) {
     const classes = useStyles();
     const dispatch = useDispatch();
     const garageCars = useSelector(({carReducer}) => carReducer.garageCars);
+    const currentCar = useSelector(({carReducer}) => carReducer.currentCar);
     const [openModal, setOpenModal] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
     const [cars, setCars] = useState([]);
@@ -65,8 +66,8 @@ export default function MainPage (props) {
           .catch((error) => {
               console.log(error);
           });
-      }
-  
+    }
+
     useEffect(() => {
         setCars(garageCars);
     }, [garageCars])
@@ -106,9 +107,10 @@ export default function MainPage (props) {
                                 <Grid container direction="column" spacing={2}>
                                     {
                                         cars.map(item => {
+                                            let isSelected = currentCar ? item.id === currentCar.id : false;
                                             return (
                                                 <Grid item>
-                                                    <CarListCard deleteCar={deleteCar} car={item}/>
+                                                    <CarListCard deleteCar={deleteCar} car={item} isSelected={isSelected}/>
                                                 </Grid>
                                             )
                                         })

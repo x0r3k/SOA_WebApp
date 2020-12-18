@@ -19,6 +19,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { ExitToApp } from '@material-ui/icons';
 import { setGarageCars, clearReducer } from '../redux/reducers/car/carActions';
 import { logout } from '../redux/reducers/auth/authActions';
+import CarNavbarCard from './car/carNavbarCard';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -90,6 +91,7 @@ export default function Navbar(props) {
   const dispatch = useDispatch();
   const user = useSelector(({authReducer}) => authReducer.user);
   const garageCars = useSelector(({carReducer}) => carReducer.garageCars);
+  const currentCar = useSelector(({carReducer}) => carReducer.currentCar);
 
   useEffect(() => {
     if(user && withCarList) {
@@ -99,9 +101,11 @@ export default function Navbar(props) {
 
   const { withSidebar, withCarList } = props;
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [carAnchorEl, setCarAnchorEl] = useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
+  const isCarOpen = Boolean(carAnchorEl);
 
   const [openSidebar, setOpenSidebar] = useState(false);
 
@@ -118,11 +122,18 @@ export default function Navbar(props) {
     setAnchorEl(null);
   };
 
-  const handleCarList = () => {
+  const handleCarListOpen = (event) => {
     if(!garageCars || !garageCars.length) {
       history.push('/car');
     }
-  }
+    else {
+      setCarAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleCarListClose = () => {
+    setCarAnchorEl(null);
+  };
 
   const menuId = 'primary-search-account-menu';
   const renderUnauthMenu = (
@@ -176,7 +187,7 @@ export default function Navbar(props) {
             </IconButton>
           }
           
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h6" noWrap onClick={() => history.push('/')}>
             AutoShop
           </Typography>
           <div className={classes.search}>
@@ -200,11 +211,12 @@ export default function Navbar(props) {
                 color="inherit"
                 className={classes.button}
                 size='large'
-                onClick={handleCarList}
+                onClick={handleCarListOpen}
               >
                 <DriveEtaIcon fontSize="large"/>
-                  Add new car
-                <AddIcon fontSize="large"/>
+                {
+                  currentCar ? `${currentCar.brand} ${currentCar.model} ${currentCar.year}` : `Car not chosen`
+                }
             </Button>
           }
           <div className={classes.sectionDesktop}>
@@ -224,6 +236,13 @@ export default function Navbar(props) {
         </Toolbar>
       </AppBar>
       { user ? renderAuthMenu : renderUnauthMenu}
+      { <CarNavbarCard 
+          carAnchorEl={carAnchorEl} 
+          isOpen={isCarOpen} 
+          onClose={handleCarListClose} 
+          garageCars={garageCars}
+          currentCar={currentCar}
+        /> }
       { React.cloneElement(props.children) }
     </div>
   );

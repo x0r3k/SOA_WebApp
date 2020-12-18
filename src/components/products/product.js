@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { setProducts } from '../../redux/reducers/product/productActions';
+import { setProducts, setProductsCategoryCar } from '../../redux/reducers/product/productActions';
 import Navbar from '../navbar';
 import ProductCard from './productCart';
 
@@ -22,13 +22,16 @@ export default function ProductPage(props) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const products = useSelector(({productReducer}) => productReducer.products);
+    const currentCar = useSelector(({carReducer}) => carReducer.currentCar);
+
 
     useEffect(() => {
-        dispatch(setProducts(id));
+        if(!currentCar) dispatch(setProducts(id));
+        else dispatch(setProductsCategoryCar(id, currentCar.id));
     }, []);
 
     return (
-        <Navbar>
+        <Navbar withCarList>
             <div>
             {   
                 products.length 
