@@ -3,7 +3,7 @@ import Register from '../components/auth/register';
 import Login from '../components/auth/login';
 import ProductPage from '../components/products/product';
 import CarPage from '../components/car/carList';
-import { setGarageCars, clearReducer } from '../redux/reducers/car/carActions';
+import OrderPage from '../components/order/orderPage';
 
 export default [
     {
@@ -42,6 +42,14 @@ export default [
         id: 5,
         Component: CarPage,
         path: '/car',
+        roles: [],
+        isPrivate: true,
+        isToken: false
+    },
+    {
+        id: 6,
+        Component: OrderPage,
+        path: '/order',
         roles: [],
         isPrivate: true,
         isToken: false

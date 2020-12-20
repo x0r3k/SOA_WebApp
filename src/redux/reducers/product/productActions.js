@@ -57,13 +57,15 @@ export function addToShoppingCart (product, amount) {
     const request = axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, requestBody);
     return (dispatch) =>
         request.then((response) => {
+            console.log("TESTX", response.response);
+            if(response.response && response.response.status && response.response.status > 300) return;
             dispatch({
                 type: ADD_TO_SHOPPING_CART,
                 payload: {
                     product: product,
                     userAmount: amount || 1
                 }
-            })
+            });
         })
         .catch(error => {
             console.log(error);

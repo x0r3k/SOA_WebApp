@@ -27,3 +27,22 @@ export function setCurrentCategory(category) {
         });
     }
 }
+
+export function getCurrentCategory(categoryId) {
+    let requestBody = {};
+    requestBody.uri = `/api/category/getCategoryById/${categoryId}`;
+    requestBody.method = 'GET';
+
+    const request = axios.post(`http://localhost:${process.env.REACT_APP_FACADE_PORT}/facade/handleWebRequest`, requestBody);
+    return (dispatch) => {
+        request.then((response) => {
+            dispatch({
+                type: SET_CURRENT_CATEGORY,
+                payload: response.data.foundedCategory
+            })
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+}

@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { setProducts, setProductsCategoryCar } from '../../redux/reducers/product/productActions';
+import { getCurrentCategory } from '../../redux/reducers/category/categoryActions';
 import Navbar from '../navbar';
 import ProductCard from './productCart';
 
@@ -26,6 +27,7 @@ export default function ProductPage(props) {
 
 
     useEffect(() => {
+        dispatch(getCurrentCategory(id));
         if(!currentCar) dispatch(setProducts(id));
         else dispatch(setProductsCategoryCar(id, currentCar.id));
     }, []);

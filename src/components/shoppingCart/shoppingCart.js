@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Grid from '@material-ui/core/Grid';
 
 import ShoppingCartCard from './shoppingCartCard';
+import { useHistory } from 'react-router';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ShoppingCartModal (props) {
     const classes = useStyles();
+    const history = useHistory();
     const dispatch = useDispatch();
     const { isOpen, setIsOpen } = props;
 
@@ -34,6 +36,11 @@ export default function ShoppingCartModal (props) {
     const handleClose = () => {
         setIsOpen(false);
     };
+
+    const openOrderPage = () => {
+        if(!shoppingCart || !shoppingCart.length) return;
+        history.push('/order');
+    }
 
     return (
         <div>
@@ -59,7 +66,7 @@ export default function ShoppingCartModal (props) {
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={openOrderPage} color="primary">
                     Go to order
                 </Button>
             </DialogActions>
